@@ -32,7 +32,9 @@ $.Bettertabs =
   # jQuery.Bettertabs.select_tab(bettertabs_id, tab_id) => click on the tab_id link of the bettertabs_id widget
   select_tab: (bettertabs_id, tab_id) ->
     $("##{tab_id}_#{bettertabs_id}_tab a").click()
-
+  escape_special_characters: ( tab_id ) ->
+    tab_id.replace( /(&|:|\.|\[|\])/g, "\\$1" );
+    
 $.fn.bettertabs = ->
   @each ->
     wrapper = $(this)
@@ -51,7 +53,7 @@ $.fn.bettertabs = ->
         event.preventDefault()
         this_tab = this_link.parent()
         if not this_tab.hasClass('active') and not this_link.hasClass('ajax-loading')
-          this_tab_content = tabs_contents.filter "##{content_id_from this_link}"
+          this_tab_content = tabs_contents.filter "##{escape_special_characters(content_id_from(this_link))}"
           previous_active_tab = tabs.filter '.active'
           previous_active_tab_content = tabs_contents.filter '.active'
           activate_tab_and_content = ->
